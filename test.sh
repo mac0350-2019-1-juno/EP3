@@ -3,19 +3,22 @@
 R="\e[0;31m"                    # red
 G="\e[1;32m"                    # green
 B="\e[1m"                       # bold
+DIM="\e[2m"
 D="\e[0m"                       # default
 
 export PGPASSWORD=c
 export ON_ERROR_STOP=1
 
 psql_query() {
-    printf "${B}psql -Upostgres $2 -c \"$1\"\n${D}"
+    printf "${B}psql -Upostgres $2 -c \"$1\"\n${DIM}"
     psql -Upostgres $2 -c "$1"
+    printf "${D}"
 }
 
 psql_file() {
-    printf "${B}psql -v ON_ERROR_STOP=1 -Upostgres $2 -f \"$1\" > /dev/null\n${D}"
+    printf "${B}psql -v ON_ERROR_STOP=1 -Upostgres $2 -f \"$1\" > /dev/null\n${DIM}"
     psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" > /dev/null
+    printf "${D}"
   }
 
 printf "\n${G} -------- Dropping databases -------- \n${D}"
