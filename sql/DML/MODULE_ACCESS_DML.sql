@@ -332,7 +332,8 @@ VALUES  ('souvictor@email.com',         public.crypt('senha', gen_salt('bf'))   
                 (28,            (SELECT id FROM perfil WHERE tipo = 'administrador')    ),
                 (29,            (SELECT id FROM perfil WHERE tipo = 'administrador')    ),
                 (30,            (SELECT id FROM perfil WHERE tipo = 'administrador')    ),
-                (31,            (SELECT id FROM perfil WHERE tipo = 'administrador')    );
+                (31,            (SELECT id FROM perfil WHERE tipo = 'administrador')    ),
+                (1,             (SELECT id FROM perfil WHERE tipo = 'dba'        )    );
 
         INSERT  INTO perfil_servico
                 (perfil_id        , servico_id                                                              )

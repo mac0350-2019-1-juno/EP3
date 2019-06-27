@@ -303,6 +303,122 @@ END;
 $$
 LANGUAGE    plpgsql;
 
+-- recuperar todos os registros em usuario_perfil
+CREATE  FUNCTION retrieve_usuario_perfil_all()
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            usuario_id,
+            perfil_id
+    FROM    usuario_perfil
+    ORDER   BY  id,
+                usuario_id,
+                perfil_id;
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- recuperar o registro em  usuario_perfil por id
+CREATE  FUNCTION retrieve_usuario_perfil_by_id(
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            usuario_id,
+            perfil_id
+    FROM    usuario_perfil
+    WHERE   id = $1
+    ORDER   BY  id;
+
+EXCEPTION   WHEN OTHERS THEN
+
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- recuperar o registro em  usuario_perfil por usuario_id, perfil_id
+CREATE  FUNCTION retrieve_usuario_perfil_by_usuario_id_perfil_id(
+                        INTEGER,
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            usuario_id,
+            perfil_id
+    FROM    usuario_perfil
+    WHERE   usuario_id = $1
+               AND perfil_id = $2
+    ORDER   BY  usuario_id,
+                perfil_id;
+
+EXCEPTION   WHEN OTHERS THEN
+
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- recuperar todos os resgistros em usuario_perfil por usuario_id
+CREATE  FUNCTION retrieve_usuario_perfil_all_by_usuario_id(
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            usuario_id,
+            perfil_id
+    FROM    usuario_perfil
+    WHERE   usuario_id = $1
+    ORDER   BY  usuario_id;
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- recuperar todos os resgistros em usuario_perfil por perfil_id
+CREATE  FUNCTION retrieve_usuario_perfil_all_by_perfil_id(
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            usuario_id,
+            perfil_id
+    FROM    usuario_perfil
+    WHERE   perfil_id = $1
+    ORDER   BY  perfil_id;
+END;
+$$
+LANGUAGE    plpgsql;
+
+
+
+-- perfis associados a um usuario
+CREATE  FUNCTION retrieve_perf_usuario(
+                        INTEGER
+)
+RETURNS TABLE (
+    perfil_id           VARCHAR(20)
+) AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  usuario_perfil.perfil_id
+    FROM    usuario_perfil
+    WHERE   usuario_perfil.usuario_id = $1;
+END;
+$$
+LANGUAGE    plpgsql;
+
 -- recuperar todos os registros em usuario
 CREATE  FUNCTION retrieve_usuario_all()
 RETURNS SETOF usuario
@@ -333,6 +449,29 @@ BEGIN
             senha
     FROM    usuario
     WHERE   id = $1
+    ORDER   BY  id;
+
+EXCEPTION   WHEN OTHERS THEN
+
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- recuperar o registro em  usuario por id
+CREATE  FUNCTION retrieve_usuario_by_email_senha(
+                        email,
+                        TEXT
+)
+RETURNS SETOF usuario
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            email,
+            senha
+    FROM    usuario
+    WHERE   (email = $1 AND
+            senha = crypt($2, senha))
     ORDER   BY  id;
 
 EXCEPTION   WHEN OTHERS THEN
@@ -732,6 +871,57 @@ BEGIN
     RETURNING   id,
                 perfil_id,
                 servico_id;
+
+EXCEPTION   WHEN OTHERS THEN
+
+END;
+$$
+LANGUAGE    plpgsql;
+
+
+-- atualizar em usuario_perfil por id
+CREATE  FUNCTION update_usuario_perfil_by_id(
+                        INTEGER,
+                        INTEGER,
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN      QUERY
+    UPDATE      usuario_perfil
+    SET         usuario_id = $2,
+                perfil_id = $3
+    WHERE       id = $1
+    RETURNING   id,
+                usuario_id,
+                perfil_id;
+
+EXCEPTION   WHEN OTHERS THEN
+
+END;
+$$
+LANGUAGE    plpgsql;
+
+-- atualizar em usuario_perfil por usuario_id, perfil_id
+CREATE  FUNCTION update_usuario_perfil_by_usuario_id_perfil_id(
+                        INTEGER,
+                        INTEGER,
+                        INTEGER,
+                        INTEGER
+)
+RETURNS SETOF usuario_perfil
+AS $$
+BEGIN
+    RETURN      QUERY
+    UPDATE      usuario_perfil
+    SET         usuario_id = $3,
+                perfil_id = $4
+    WHERE       usuario_id = $1
+               AND perfil_id = $2
+    RETURNING   id,
+                usuario_id,
+                perfil_id;
 
 EXCEPTION   WHEN OTHERS THEN
 

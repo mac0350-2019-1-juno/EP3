@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'instituto.apps.institutoConfig',
+    'log.apps.logConfig',
 ]
 
 MIDDLEWARE = [
@@ -93,6 +94,14 @@ DATABASES = {
     'juno_access': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'juno_access',
+        'USER': 'postgres',
+        'PASSWORD': 'c',
+        'HOST': '',
+        'PORT': ''
+    },
+    'juno_access_people': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_access_people',
         'USER': 'postgres',
         'PASSWORD': 'c',
         'HOST': '',

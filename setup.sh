@@ -17,13 +17,14 @@ psql_query() {
 
 psql_file() {
     printf "${B}psql -v ON_ERROR_STOP=1 -Upostgres $2 -f \"$1\" > /dev/null\n${DIM}"
-    psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" 
+    psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" > /dev/null
     printf "${D}"
   }
 
 printf "\n${G} -------- Dropping databases -------- \n${D}"
-psql_query  "DROP DATABASE juno_people"   ""
-psql_query  "DROP DATABASE juno_access"   ""
+psql_query  "DROP DATABASE juno_people"          ""
+psql_query  "DROP DATABASE juno_access"          ""
+psql_query  "DROP DATABASE juno_access_people"   ""
 
 # DROP ROLES
 # psql_query  "DROP ROLE dba"         && 0
@@ -34,6 +35,7 @@ set -e
 printf "\n${G} -------- Creating databases -------- \n${D}"
 psql_query  "CREATE DATABASE juno_people"
 psql_query  "CREATE DATABASE juno_access"
+psql_query  "CREATE DATABASE juno_access_people"
 
 # # Runs a setup
 # printf "\n${G} -------- Setting Up Server -------- \n${D}"
@@ -43,15 +45,33 @@ psql_query  "CREATE DATABASE juno_access"
 printf "\n${G} -------- Executing DDL's -------- \n${D}"
 psql_file   "./sql/DDL/MODULE_PEOPLE_DDL.sql"     "juno_people"
 psql_file   "./sql/DDL/MODULE_ACCESS_DDL.sql"     "juno_access"
+psql_file   "./sql/DDL/INTER_MOD_ACC_PEO_DDL.sql"  "juno_access_people"
 
 # functions
 printf "\n${G} -------- Creating functions -------- \n${D}"
 psql_file   "./sql/FUNCTIONS/MODULE_PEOPLE_FUNCTIONS.sql"     "juno_people"
 psql_file   "./sql/FUNCTIONS/MODULE_ACCESS_FUNCTIONS.sql"     "juno_access"
+psql_file   "./sql/FUNCTIONS/INTER_MOD_ACC_PEO_FUNCTIONS.sql" "juno_access_people"
 
-# DDLs
+# DMLs
 printf "\n${G} -------- Executing DML's -------- \n${D}"
 psql_file   "./sql/DML/MODULE_PEOPLE_DML.sql"     "juno_people"
 psql_file   "./sql/DML/MODULE_ACCESS_DML.sql"     "juno_access"
+psql_file   "./sql/DML/INTER_MOD_ACC_PEO_DML.sql" "juno_access_people"
+
+printf "\n${D}"
+
+# Deleting old migrations
+printf "\n${G} -------- Deleting old migrations -------- \n${D}"
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc"  -delete
+
+# Migrating
+printf "\n${G} -------- Migrating -------- \n${D}"
+python3.6 juno/manage.py makemigrations
+python3.6 juno/manage.py migrate
+python3.6 juno/manage.py migrate --database=juno_people
+python3.6 juno/manage.py migrate --database=juno_access
+python3.6 juno/manage.py migrate --database=juno_access_people
 
 printf "\n${D}"

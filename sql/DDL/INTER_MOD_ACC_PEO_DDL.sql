@@ -1,14 +1,27 @@
 BEGIN;
-CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 \echo  `printf 'admins'`
 -- admins
+
+    CREATE  SCHEMA admins;
 
     GRANT   USAGE
     ON      SCHEMA  admins
     TO      dba;
 
 --
-SELECT * FROM app.pessoa;
+\echo  `printf 'email'`
+-- email
+
+    CREATE  EXTENSION citext;
+
+    CREATE  DOMAIN email
+            AS CITEXT
+    CHECK   (value ~ ('^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@'
+                    || '[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'
+                    || '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]'
+                    || '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
+
+--
 \echo  `printf 'level 2'`
 -- level 2
 
@@ -21,17 +34,7 @@ SELECT * FROM app.pessoa;
         PRIMARY KEY (id),
 
         UNIQUE      (pessoa_id,
-                     usuario_id),
-
-        FOREIGN KEY (pessoa_id)
-        REFERENCES  app.pessoa(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (usuario_id)
-        REFERENCES  app.usuario(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE
+                     usuario_id)
     );
 
 --

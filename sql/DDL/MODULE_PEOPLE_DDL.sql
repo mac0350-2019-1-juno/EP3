@@ -1,5 +1,4 @@
 BEGIN;
-CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 \echo  `printf 'admins'`
 -- admins
 

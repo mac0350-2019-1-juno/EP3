@@ -1,4 +1,14 @@
-{{ menu|safe }}
+<p align=center>
+  Ol&aacute; {{ user.email }}!
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="..">Voltar ao inicio</a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {{ menu|safe }} -
+  <a href="create">Create</a>
+  <a href="retrival">Retrival</a>
+  <a href="update">Update</a>
+  <a href="delete">Delete</a>
+</p>
 <form action="create" method="post">
     {% csrf_token %}
     {{ form.as_p }}

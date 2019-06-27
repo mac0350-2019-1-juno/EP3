@@ -9,7 +9,7 @@ class Create_form(forms.ModelForm):
 
 class Update_form(forms.ModelForm):
     class Meta:
-        model = InstitutoUpdater
+        model = Instituto
         fields = ["nome_antigo", "nome_novo"]
     nome_antigo = forms.CharField(label='Nome a ser alterado do instituto', max_length=128)
     nome_novo   = forms.CharField(label='Novo nome do instituto', max_length=128)
