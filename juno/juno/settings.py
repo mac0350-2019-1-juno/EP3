@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'bi1q1#u^m=ghd#zs)lw0w=u_zhx5bb-f6bex$49^^jj%%fmy)p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'instituto.apps.institutoConfig',
 ]
 
 MIDDLEWARE = [
@@ -50,11 +51,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'juno.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +75,28 @@ WSGI_APPLICATION = 'juno.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_people',
+        'USER': 'postgres',
+        'PASSWORD': 'c',
+        'HOST': '',
+        'PORT': ''
+    },
+    'juno_people': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_people',
+        'USER': 'postgres',
+        'PASSWORD': 'c',
+        'HOST': '',
+        'PORT': ''
+    },
+    'juno_access': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_access',
+        'USER': 'postgres',
+        'PASSWORD': 'c',
+        'HOST': '',
+        'PORT': ''
     }
 }
 

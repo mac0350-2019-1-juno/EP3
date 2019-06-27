@@ -17,7 +17,7 @@ psql_query() {
 
 psql_file() {
     printf "${B}psql -v ON_ERROR_STOP=1 -Upostgres $2 -f \"$1\" > /dev/null\n${DIM}"
-    psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" > /dev/null
+    psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" 
     printf "${D}"
   }
 
@@ -53,3 +53,5 @@ psql_file   "./sql/FUNCTIONS/MODULE_ACCESS_FUNCTIONS.sql"     "juno_access"
 printf "\n${G} -------- Executing DML's -------- \n${D}"
 psql_file   "./sql/DML/MODULE_PEOPLE_DML.sql"     "juno_people"
 psql_file   "./sql/DML/MODULE_ACCESS_DML.sql"     "juno_access"
+
+printf "\n${D}"
