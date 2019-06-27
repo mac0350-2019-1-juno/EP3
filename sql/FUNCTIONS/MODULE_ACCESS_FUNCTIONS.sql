@@ -116,43 +116,6 @@ END;
 $$
 LANGUAGE    plpgsql;
 
--- remover de instituto por id
-CREATE  FUNCTION delete_instituto_by_id(
-                        INTEGER
-)
-RETURNS SETOF instituto
-AS $$
-BEGIN
-    RETURN      QUERY
-    DELETE      FROM instituto
-    WHERE       id = $1
-    RETURNING   id,
-                nome;
-
-EXCEPTION   WHEN OTHERS THEN
-
-END;
-$$
-LANGUAGE    plpgsql;
-
--- remover de instituto por nome
-CREATE  FUNCTION delete_instituto_by_nome(
-                        VARCHAR(128)
-)
-RETURNS SETOF instituto
-AS $$
-BEGIN
-    RETURN      QUERY
-    DELETE      FROM instituto
-    WHERE       nome = $1
-    RETURNING   id,
-                nome;
-
-EXCEPTION   WHEN OTHERS THEN
-
-END;
-$$
-LANGUAGE    plpgsql;
 
 -- remover de usuario por id
 CREATE  FUNCTION delete_usuario_by_id(

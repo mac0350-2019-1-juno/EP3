@@ -1,14 +1,7 @@
 BEGIN;
-
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 \echo  `printf 'admins'`
 -- admins
-
-    CREATE  ROLE dba
-    WITH    SUPERUSER
-            CREATEDB
-            CREATEROLE
-    LOGIN   ENCRYPTED PASSWORD 'dba1234'
-    VALID   UNTIL '2019-07-01';
 
     CREATE  SCHEMA admins;
 

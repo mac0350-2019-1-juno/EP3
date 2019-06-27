@@ -1,14 +1,7 @@
 BEGIN;
-
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 \echo  `printf 'admins'`
 -- admins
-
-    CREATE  ROLE dba
-    WITH    SUPERUSER
-            CREATEDB
-            CREATEROLE
-    LOGIN   ENCRYPTED PASSWORD 'dba1234'
-    VALID   UNTIL '2019-07-01';
 
     CREATE  SCHEMA admins;
 
@@ -23,7 +16,7 @@ BEGIN;
 
     CREATE  EXTENSION citext;
 
-    CREATE  DOMAIN email 
+    CREATE  DOMAIN email
             AS CITEXT
     CHECK   (value ~ ('^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@'
                     || '[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'
@@ -38,7 +31,7 @@ BEGIN;
     CREATE  EXTENSION pgcrypto;
 
     CREATE  FUNCTION check_senha(
-        email               email, 
+        email               email,
         senha               TEXT
     )
     RETURNS BOOLEAN AS $$
@@ -47,26 +40,26 @@ BEGIN;
     BEGIN
         SELECT  COUNT(*) = 1 INTO valid_login
         FROM    public.usuario
-        WHERE   email = $1 
+        WHERE   email = $1
                 AND senha = public.crypt($2, senha);
 
         RETURN valid_login;
     END;
-    $$ 
+    $$
     LANGUAGE    plpgsql
     SECURITY    DEFINER
     SET         search_path = admins, pg_temp;
 
-    REVOKE  ALL 
+    REVOKE  ALL
     ON      FUNCTION check_senha(
-        email               email, 
+        email               email,
         senha               TEXT
     )
     FROM    PUBLIC;
 
-    GRANT   EXECUTE 
+    GRANT   EXECUTE
     ON      FUNCTION check_senha(
-        email               email, 
+        email               email,
         senha               TEXT)
     TO      dba;
 
@@ -118,14 +111,14 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (usuario_id, 
+        UNIQUE      (usuario_id,
                      perfil_id),
 
         FOREIGN KEY (usuario_id)
         REFERENCES  usuario(id)
         ON UPDATE   CASCADE
         ON DELETE   CASCADE,
-        
+
         FOREIGN KEY (perfil_id)
         REFERENCES  perfil(id)
         ON UPDATE   CASCADE
@@ -140,14 +133,14 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (perfil_id, 
+        UNIQUE      (perfil_id,
                      servico_id),
 
         FOREIGN KEY (perfil_id)
         REFERENCES  perfil(id)
         ON UPDATE   CASCADE
         ON DELETE   CASCADE,
-        
+
         FOREIGN KEY (servico_id)
         REFERENCES  servico(id)
         ON UPDATE   CASCADE

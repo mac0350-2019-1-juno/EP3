@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# ./test.sh
-
-R="\e[31m"                      # red
-G="\e[32m"                      # green
+R="\e[0;31m"                    # red
+G="\e[1;32m"                    # green
 B="\e[1m"                       # bold
 D="\e[0m"                       # default
 
-# postgres password
-export PGPASSWORD=postgres
+export PGPASSWORD=c
 export ON_ERROR_STOP=1
 
 psql_query() {
@@ -19,29 +16,37 @@ psql_query() {
 psql_file() {
     printf "${B}psql -v ON_ERROR_STOP=1 -Upostgres $2 -f \"$1\" > /dev/null\n${D}"
     psql -v ON_ERROR_STOP=1 -Upostgres $2 -f "$1" > /dev/null
-}
+  }
 
-psql_query  "DROP DATABASE juno"    && 0
-psql_query  "DROP ROLE dba"         && 0
+printf "\n${G} -------- Dropping databases -------- \n${D}"
+psql_query  "DROP DATABASE juno_people"   ""
+psql_query  "DROP DATABASE juno_access"   ""
+
+# DROP ROLES
+# psql_query  "DROP ROLE dba"         && 0
 
 set -e
 
-psql_query  "CREATE DATABASE juno"
+# CREATE DATABASES
+printf "\n${G} -------- Creating databases -------- \n${D}"
+psql_query  "CREATE DATABASE juno_people"
+psql_query  "CREATE DATABASE juno_access"
 
-# psql_file   "./sql/DDL.sql"                     "juno"
+# # Runs a setup
+# printf "\n${G} -------- Setting Up Server -------- \n${D}"
+# psql_file   "./sql/server_setup.sql" ""
 
-# psql_file   "./sql/DML.sql"                     "juno"
+# DDLs
+printf "\n${G} -------- Executing DDL's -------- \n${D}"
+psql_file   "./sql/DDL/MODULE_PEOPLE_DDL.sql"     "juno_people"
+psql_file   "./sql/DDL/MODULE_ACCESS_DDL.sql"     "juno_access"
 
-# psql_file   "./sql/DML_CREATE_GROUP.sql"        "juno"
-# psql_file   "./sql/DML_CREATE_GROUP.test.sql"   "juno"
-# psql_file   "./sql/DML_RETRIVAL_GROUP.sql"      "juno"
-# psql_file   "./sql/DML_RETRIVAL_GROUP.test.sql" "juno"
-# psql_file   "./sql/DML_UPDATE_GROUP.sql"        "juno"
-# psql_file   "./sql/DML_UPDATE_GROUP.test.sql"   "juno"
-# psql_file   "./sql/DML_DELETE_GROUP.sql"        "juno"
-# psql_file   "./sql/DML_DELETE_GROUP.test.sql"   "juno"
+# functions
+printf "\n${G} -------- Creating functions -------- \n${D}"
+psql_file   "./sql/FUNCTIONS/MODULE_PEOPLE_FUNCTIONS.sql"     "juno_people"
+psql_file   "./sql/FUNCTIONS/MODULE_ACCESS_FUNCTIONS.sql"     "juno_access"
 
-# psql_file   "./sql/DML_CLEAN.sql"               "juno"
-
-# psql_query  "DROP DATABASE juno"
-# psql_query  "DROP ROLE dba"
+# DDLs
+printf "\n${G} -------- Executing DML's -------- \n${D}"
+psql_file   "./sql/DML/MODULE_PEOPLE_DML.sql"     "juno_people"
+psql_file   "./sql/DML/MODULE_ACCESS_DML.sql"     "juno_access"

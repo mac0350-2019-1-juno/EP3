@@ -1,23 +1,14 @@
 BEGIN;
-
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 \echo  `printf 'admins'`
 -- admins
-
-    CREATE  ROLE dba
-    WITH    SUPERUSER
-            CREATEDB
-            CREATEROLE
-    LOGIN   ENCRYPTED PASSWORD 'dba1234'
-    VALID   UNTIL '2019-07-01';
-
-    CREATE  SCHEMA admins;
 
     GRANT   USAGE
     ON      SCHEMA  admins
     TO      dba;
 
 --
-
+SELECT * FROM app.pessoa;
 \echo  `printf 'level 2'`
 -- level 2
 
@@ -29,16 +20,16 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (pessoa_id, 
+        UNIQUE      (pessoa_id,
                      usuario_id),
 
         FOREIGN KEY (pessoa_id)
-        REFERENCES  pessoa(id)
+        REFERENCES  app.pessoa(id)
         ON UPDATE   CASCADE
         ON DELETE   CASCADE,
-        
+
         FOREIGN KEY (usuario_id)
-        REFERENCES  usuario(id)
+        REFERENCES  app.usuario(id)
         ON UPDATE   CASCADE
         ON DELETE   CASCADE
     );
