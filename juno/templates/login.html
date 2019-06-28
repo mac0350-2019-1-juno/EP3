@@ -4,12 +4,12 @@
   <a href="..">Voltar ao inicio</a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   Acesso -
-  <a href="login">Log in</a>
-  <a href="sigin">Sig In</a>
+  <a href="login">Login</a>
+  <a href="signin">Sigin</a>
   <a href="logout">Log out</a>
 </p>
 <form action="login" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Log in">
+    <input type="submit" value="Login">
 </form>

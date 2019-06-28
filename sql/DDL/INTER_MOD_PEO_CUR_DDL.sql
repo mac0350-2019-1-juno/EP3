@@ -3,19 +3,20 @@ BEGIN;
 \echo  `printf 'admins'`
 -- admins
 
-    CREATE  ROLE dba
-    WITH    SUPERUSER
-            CREATEDB
-            CREATEROLE
-    LOGIN   ENCRYPTED PASSWORD 'dba1234'
-    VALID   UNTIL '2019-07-01';
-
     CREATE  SCHEMA admins;
 
     GRANT   USAGE
     ON      SCHEMA  admins
     TO      dba;
 
+    CREATE  EXTENSION citext;
+
+    CREATE  DOMAIN email
+            AS CITEXT
+    CHECK   (value ~ ('^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@'
+                    || '[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'
+                    || '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]'
+                    || '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
 --
 
 \echo  `printf 'level 4'`
@@ -30,19 +31,9 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (aluno_id, 
-                     curso_id, 
-                     inicio),
-
-        FOREIGN KEY (aluno_id)
-        REFERENCES  aluno(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (curso_id)
-        REFERENCES  curso(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE
+        UNIQUE      (aluno_id,
+                     curso_id,
+                     inicio)
     );
 
     \echo  `printf '\tCREATE  TABLE administror_curso'`
@@ -55,19 +46,9 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (administrador_id, 
-                     curso_id, 
+        UNIQUE      (administrador_id,
+                     curso_id,
                      inicio),
-
-        FOREIGN KEY (administrador_id)
-        REFERENCES  administrador(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (curso_id)
-        REFERENCES  curso(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
 
         CHECK       (inicio <= termino)
     );
@@ -82,20 +63,10 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (professor_id, 
-                     disciplina_id, 
-                     semestre, 
+        UNIQUE      (professor_id,
+                     disciplina_id,
+                     semestre,
                      ano),
-
-        FOREIGN KEY (professor_id)
-        REFERENCES  professor(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (disciplina_id)
-        REFERENCES  disciplina(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
 
         CHECK       (semestre IN (1, 2))
     );
@@ -110,18 +81,8 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (aluno_id, 
+        UNIQUE      (aluno_id,
                      disciplina_id),
-
-        FOREIGN KEY (aluno_id)
-        REFERENCES  aluno(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (disciplina_id)
-        REFERENCES  disciplina(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
 
         CHECK       (semestre IN (1, 2))
     );
@@ -151,28 +112,6 @@ BEGIN;
 \echo  `printf 'level 6'`
 -- level 6
 
-    \echo  `printf '\tCREATE  TABLE disciplina_modulo'`
-    CREATE  TABLE disciplina_modulo (
-        id                      SERIAL,
-        disciplina_id           INTEGER         NOT NULL,
-        modulo_id               INTEGER         NOT NULL,
-
-        PRIMARY KEY (id),
-
-        UNIQUE      (disciplina_id, 
-                     modulo_id),
-
-        FOREIGN KEY (disciplina_id)
-        REFERENCES  disciplina(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-
-        FOREIGN KEY (modulo_id)
-        REFERENCES  modulo(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE
-    );
-
     \echo  `printf '\tCREATE  TABLE matricula'`
     CREATE  TABLE matricula (
         id                      SERIAL,
@@ -187,22 +126,17 @@ BEGIN;
         UNIQUE      (aluno_id,
                      oferecimento_id),
 
-        FOREIGN KEY (aluno_id)
-        REFERENCES  aluno(id) 
+        FOREIGN KEY (oferecimento_id)
+        REFERENCES  oferecimento(id)
         ON UPDATE   CASCADE
         ON DELETE   CASCADE,
 
-        FOREIGN KEY (oferecimento_id)
-        REFERENCES  oferecimento(id) 
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE,
-         
         CHECK       (UPPER(estado) IN ('M', 'C', 'X', 'D', 'R')),
 
-        CHECK       (nota >= 0.0 
+        CHECK       (nota >= 0.0
                      AND nota <= 10.0),
-        
-        CHECK       (frequencia >= 0.0 
+
+        CHECK       (frequencia >= 0.0
                      AND frequencia <= 100.0)
     );
 

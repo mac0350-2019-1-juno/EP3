@@ -2,29 +2,29 @@ BEGIN;
 
 INSERT  INTO curso
         (codigo,    nome,                       instituto_id                                    )
-VALUES  (45052,     'BCC',                      (SELECT id FROM instituto WHERE nome = 'IME'  ) ),
-        (00001,     'Lic',                      (SELECT id FROM instituto WHERE nome = 'IME'  ) ),
-        (00002,     'Pura',                     (SELECT id FROM instituto WHERE nome = 'IME'  ) ),
-        (00003,     'Estat',                    (SELECT id FROM instituto WHERE nome = 'IME'  ) ),
-        (00004,     'Aplicada',                 (SELECT id FROM instituto WHERE nome = 'IME'  ) ),
-        (00005,     'Engenharia da computação', (SELECT id FROM instituto WHERE nome = 'Poli' ) ),
-        (00006,     'Engenharia Civil',         (SELECT id FROM instituto WHERE nome = 'Poli' ) ),
-        (00007,     'Engenharia Ambiental',     (SELECT id FROM instituto WHERE nome = 'Poli' ) ),
-        (00008,     'Moda',                     (SELECT id FROM instituto WHERE nome = 'ECA'  ) ),
-        (00009,     'Filosofia',                (SELECT id FROM instituto WHERE nome = 'FFLCH') );
+VALUES  (45052,     'BCC',                      1 ),
+        (00001,     'Lic',                      1 ),
+        (00002,     'Pura',                     1 ),
+        (00003,     'Estat',                    1 ),
+        (00004,     'Aplicada',                 1 ),
+        (00005,     'Engenharia da computação', 2 ),
+        (00006,     'Engenharia Civil',         2 ),
+        (00007,     'Engenharia Ambiental',     2 ),
+        (00008,     'Moda',                     4 ),
+        (00009,     'Filosofia',                3 );
 
 INSERT  INTO disciplina
         (sigla,     departamento_id,                                    nome,                                               credito_aula,   credito_trabalho,   semestre_ideal  )
-VALUES  ('MAC0110', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'Introdução à Computação',                          4,              0,                  1               ),
-        ('MAC0425', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'IA',                                               4,              0,                  1               ),
-        ('MAC0318', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'Introdução à Programação de Robôs Móveis',         4,              0,                  2               ),
-        ('MAC0216', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'Técnicas de Programação',                          4,              2,                  2               ),
-        ('MAC0218', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'Técnicas de Programação 2',                        4,              2,                  3               ),
-        ('MAT0349', (SELECT id FROM departamento WHERE sigla = 'MAT'),  'Introdução à Lógica',                              4,              0,                  4               ),
-        ('MAE0119', (SELECT id FROM departamento WHERE sigla = 'MAE'),  'Introdução à Probabilidade e à Estatística',       6,              0,                  5               ),
-        ('MAE0228', (SELECT id FROM departamento WHERE sigla = 'MAE'),  'Noções de Probabilidade e Processos Estocásticos', 4,              0,                  6               ),
-        ('4302112', (SELECT id FROM departamento WHERE sigla = '430'),  'Física II',                                        6,              0,                  7               ),
-        ('MAC0335', (SELECT id FROM departamento WHERE sigla = 'MAC'),  'Leitura Dramática',                                3,              0,                  8               );
+VALUES  ('MAC0110', 1,  'Introdução à Computação',                          4,              0,                  1               ),
+        ('MAC0425', 1,  'IA',                                               4,              0,                  1               ),
+        ('MAC0318', 1,  'Introdução à Programação de Robôs Móveis',         4,              0,                  2               ),
+        ('MAC0216', 1,  'Técnicas de Programação',                          4,              2,                  2               ),
+        ('MAC0218', 1,  'Técnicas de Programação 2',                        4,              2,                  3               ),
+        ('MAT0349', 1,  'Introdução à Lógica',                              4,              0,                  4               ),
+        ('MAE0119', 4,  'Introdução à Probabilidade e à Estatística',       6,              0,                  5               ),
+        ('MAE0228', 4,  'Noções de Probabilidade e Processos Estocásticos', 4,              0,                  6               ),
+        ('4302112', 11,  'Física II',                                        6,              0,                  7               ),
+        ('MAC0335', 1,  'Leitura Dramática',                                3,              0,                  8               );
 
 
 INSERT  INTO enfase

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+senha_postgres = 'c'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -74,13 +76,12 @@ WSGI_APPLICATION = 'juno.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'juno_people',
         'USER': 'postgres',
-        'PASSWORD': 'Victor17121997',
+        'PASSWORD': senha_postgres,
         'HOST': '',
         'PORT': ''
     },
@@ -88,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'juno_people',
         'USER': 'postgres',
-        'PASSWORD': 'Victor17121997',
+        'PASSWORD': senha_postgres,
         'HOST': '',
         'PORT': ''
     },
@@ -96,7 +97,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'juno_access',
         'USER': 'postgres',
-        'PASSWORD': 'Victor17121997',
+        'PASSWORD': senha_postgres,
         'HOST': '',
         'PORT': ''
     },
@@ -104,7 +105,23 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'juno_access_people',
         'USER': 'postgres',
-        'PASSWORD': 'Victor17121997',
+        'PASSWORD': senha_postgres,
+        'HOST': '',
+        'PORT': ''
+    },
+    'juno_curriculum': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_curriculum',
+        'USER': 'postgres',
+        'PASSWORD': senha_postgres,
+        'HOST': '',
+        'PORT': ''
+    },
+    'juno_people_curriculum': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'juno_people_curriculum',
+        'USER': 'postgres',
+        'PASSWORD': senha_postgres,
         'HOST': '',
         'PORT': ''
     }

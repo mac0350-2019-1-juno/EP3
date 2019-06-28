@@ -11,11 +11,13 @@ from juno.util import *
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
     return render(request, "acesso.html", {'content': ""})
 
 def login(request):
     if request.user.is_authenticated:
-        return render(request, "acesso.html", {'content': ""})
+        return HttpResponseRedirect('/')
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -36,7 +38,7 @@ def login(request):
                         user.save()
                     user = authenticate_dj(username=result[0], email=result[1], password=result[2])
                     login_dj(request, user)
-                    content = "Logado com sucesso."
+                    return HttpResponseRedirect('/')
             # redirect to a new URL:
             return render(request, "acesso.html", {'content':content})
 
@@ -46,9 +48,9 @@ def login(request):
 
     return render(request, "login.html", {'form':form})
 
-def sigin(request):
+def signin(request):
     if request.user.is_authenticated:
-        return render(request, "acesso.html", {'content': ""})
+        return HttpResponseRedirect('/')
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -71,8 +73,8 @@ def sigin(request):
     else:
         form = Log_form()
 
-    return render(request, "sigin.html", {'form':form})
+    return render(request, "signin.html", {'form':form})
 
 def logout(request):
     logout_dj(request)
-    return render(request, "acesso.html", {'content':"Deslogado com sucesso"})
+    return HttpResponseRedirect('/')

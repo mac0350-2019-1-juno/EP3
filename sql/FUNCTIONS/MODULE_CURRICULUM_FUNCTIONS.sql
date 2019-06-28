@@ -589,6 +589,28 @@ END;
 $$
 LANGUAGE    plpgsql;
 
+-- recuperar todos os resgistros em disciplina por departamento_id
+CREATE  FUNCTION retrieve_disciplina_all_by_departamento_id(
+                        INTEGER
+)
+RETURNS SETOF disciplina
+AS $$
+BEGIN
+    RETURN  QUERY
+    SELECT  id,
+            sigla,
+            departamento_id,
+            nome,
+            credito_aula,
+            credito_trabalho,
+            semestre_ideal
+    FROM    disciplina
+    WHERE   departamento_id = $1
+    ORDER   BY  departamento_id;
+END;
+$$
+LANGUAGE    plpgsql;
+
 -- recuperar todos os registros em enfase
 CREATE  FUNCTION retrieve_enfase_all()
 RETURNS SETOF enfase

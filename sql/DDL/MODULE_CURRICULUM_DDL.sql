@@ -3,13 +3,6 @@ BEGIN;
 \echo  `printf 'admins'`
 -- admins
 
-    CREATE  ROLE dba
-    WITH    SUPERUSER
-            CREATEDB
-            CREATEROLE
-    LOGIN   ENCRYPTED PASSWORD 'dba1234'
-    VALID   UNTIL '2019-07-01';
-
     CREATE  SCHEMA admins;
 
     GRANT   USAGE
@@ -30,12 +23,7 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (codigo),
-
-        FOREIGN KEY (instituto_id)
-        REFERENCES  instituto(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE
+        UNIQUE      (codigo)
     );
 
     \echo  `printf '\tCREATE  TABLE disciplina'`
@@ -50,12 +38,7 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (sigla),
-
-        FOREIGN KEY (departamento_id)
-        REFERENCES  departamento(id)
-        ON UPDATE   CASCADE
-        ON DELETE   CASCADE
+        UNIQUE      (sigla)
     );
 
 --
@@ -89,8 +72,8 @@ BEGIN;
 
         PRIMARY KEY (id),
 
-        UNIQUE      (disciplina_id, 
-                     curso_id, 
+        UNIQUE      (disciplina_id,
+                     curso_id,
                      requisito_id),
 
         FOREIGN KEY (disciplina_id)
@@ -130,6 +113,32 @@ BEGIN;
         ON UPDATE   CASCADE
         ON DELETE   CASCADE
     );
+
+--
+
+-- level 6
+
+\echo  `printf '\tCREATE  TABLE disciplina_modulo'`
+CREATE  TABLE disciplina_modulo (
+    id                      SERIAL,
+    disciplina_id           INTEGER         NOT NULL,
+    modulo_id               INTEGER         NOT NULL,
+
+    PRIMARY KEY (id),
+
+    UNIQUE      (disciplina_id,
+                 modulo_id),
+
+    FOREIGN KEY (disciplina_id)
+    REFERENCES  disciplina(id)
+    ON UPDATE   CASCADE
+    ON DELETE   CASCADE,
+
+    FOREIGN KEY (modulo_id)
+    REFERENCES  modulo(id)
+    ON UPDATE   CASCADE
+    ON DELETE   CASCADE
+);
 
 --
 
