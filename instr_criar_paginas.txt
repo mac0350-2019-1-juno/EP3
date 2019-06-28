@@ -5,7 +5,7 @@ nome correspondera a http://127.0.0.1:8000/pasta
 - Em models.py, altere os atributos para os da tabela
 - Em forms.py, altere os atributos para os apropriados para o usuario preencher
 - Em views.py, onde estiver "juno_base", altere para a base da tabela a ser
-utilizada
+utiliza, aletere os microsservicos e seus argumentos
 - Em juno/juno/settings.py, em INSTALLED_APPS, acrescente
 <pasta>.apps.<pasta>Config
 - Em juno/juno/urls.py, em urlpatterns, acrescente com a virgula
