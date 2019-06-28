@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db import connections
-from instituto.forms import *
+from base.forms import *
 from .models import *
 from juno.util import *
 
-menu =  """Instituto"""
+menu =  """base"""
 
 def index(request):
     renderer = menu
     return render(request, "index.html", {'content':"", 'menu':menu})
 
 def create(request):
-    if not check_permission(request.user.username, "create_instituto"):
+    if not check_permission(request.user.username, "create_base"):
         return render(request, "index.html", {'content':"Usu&aacute;rio n&atilde;o autorizado!", 'menu':menu})
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -21,8 +21,8 @@ def create(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            with connections['juno_people'].cursor() as cursor:
-                cursor.execute("SELECT * FROM create_instituto(%s)", [form.cleaned_data['nome']])
+            with connections['juno_base'].cursor() as cursor:
+                cursor.execute("SELECT * FROM create_base(%s)", [form.cleaned_data['nome']])
                 result = cursor.fetchone()
 
                 if result == None:
@@ -39,16 +39,17 @@ def create(request):
     return render(request, "create.html", {'form':form, 'menu':menu})
 
 def retrival(request):
-    if not check_permission(request.user.username, "create_instituto"):
+    if not check_permission(request.user.username, "create_base"):
         return render(request, "index.html", {'content':"Usu&aacute;rio n&atilde;o autorizado!", 'menu':menu})
-    with connections['juno_people'].cursor() as cursor:
-        cursor.execute("SELECT * FROM retrieve_instituto_all()")
+    with connections['juno_base'].cursor() as cursor:
+        cursor.execute("SELECT * FROM retrieve_base_all()")
         dict = dictfetchall(cursor)
-        content = make_table(dict)
+        output = "".join(["<tr><th>{}</th></tr>".format(i['nome']) for i in dict])
+        content = "<table><tr><th>base</th></tr>" + output + "</table>"
     return render(request, "retrival.html", {'content':content, 'menu':menu})
 
 def update(request):
-    if not check_permission(request.user.username, "update_instituto_by_nome"):
+    if not check_permission(request.user.username, "update_base_by_nome"):
         return render(request, "index.html", {'content':"Usu&aacute;rio n&atilde;o autorizado!", 'menu':menu})
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -57,8 +58,8 @@ def update(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            with connections['juno_people'].cursor() as cursor:
-                cursor.execute("SELECT * FROM update_instituto_by_nome(%s, %s)", [form.cleaned_data['nome_antigo'], form.cleaned_data['nome_novo']])
+            with connections['juno_base'].cursor() as cursor:
+                cursor.execute("SELECT * FROM update_base_by_nome(%s, %s)", [form.cleaned_data['nome_antigo'], form.cleaned_data['nome_novo']])
                 result = cursor.fetchone()
 
                 if result == None:
@@ -75,7 +76,7 @@ def update(request):
     return render(request, "update.html", {'form':form, 'menu':menu})
 
 def delete(request):
-    if not check_permission(request.user.username, "delete_instituto_by_nome"):
+    if not check_permission(request.user.username, "delete_base_by_nome"):
         return render(request, "index.html", {'content':"Usu&aacute;rio n&atilde;o autorizado!", 'menu':menu})
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -84,8 +85,8 @@ def delete(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            with connections['juno_people'].cursor() as cursor:
-                cursor.execute("SELECT * FROM delete_instituto_by_nome(%s)", [form.cleaned_data['nome']])
+            with connections['juno_base'].cursor() as cursor:
+                cursor.execute("SELECT * FROM delete_base_by_nome(%s)", [form.cleaned_data['nome']])
                 result = cursor.fetchone()
 
                 if result == None:

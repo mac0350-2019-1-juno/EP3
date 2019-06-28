@@ -1,0 +1,22 @@
+Para criar uma nova pagina:
+- Duplique a pasta juno/juno/base e altere o nome da nova pasta,  note que o
+nome correspondera a http://127.0.0.1:8000/pasta
+- Mude todos os locais que estiverem "base" para o nome da nova pasta
+- Em models.py, altere os atributos para os da tabela
+- Em forms.py, altere os atributos para os apropriados para o usuario preencher
+- Em views.py, onde estiver "juno_base", altere para a base da tabela a ser
+utilizada
+- Em juno/juno/settings.py, em INSTALLED_APPS, acrescente
+<pasta>.apps.<pasta>Config
+- Em juno/juno/urls.py, em urlpatterns, acrescente com a virgula
+path('<pasta>/', include('<pasta>.urls')),
+- Em setup.sh, altere o valor de PGPASSWORD para a senha de seu postgres
+- Execute ./setup.sh
+
+Para rodar o servidor pela primeira vez:
+- Em setup.sh, altere o valor de PGPASSWORD para a senha de seu postgres
+- Execute ./setup.sh
+- Execute python3.6 juno/managpy runserver
+
+Para rodar o servidor:
+- Execute python3.6 juno/managpy runserver

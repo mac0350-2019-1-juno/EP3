@@ -17,9 +17,18 @@ def check_permission(user, servcice):
         cursor.execute("SELECT * FROM retrieve_usuario_perfil_all_by_usuario_id(%s)", [user])
         for perfil in cursor.fetchall():
             with connections['juno_access'].cursor() as cursor2:
-                print(perfil)
                 cursor2.execute("SELECT * FROM retrieve_perfil_servico_by_perfil_id_servico_id(%s, %s)", [perfil[2], servico_id])
                 result = cursor2.fetchone()
                 if result is not None:
                     return True
     return False
+
+def make_table(body_content):
+    head = "".join("<tr>{}</tr>".format(
+             "".join("<th>{}</th>".format(i) for i in body_content[0])))
+
+    body = "".join("<tr>{}</tr>".format(
+             "".join("<th>{}</th>".format(j) for j in i.values()))
+           for i in body_content)
+
+    return "<table>{}{}</table".format(head, body)
