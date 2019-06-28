@@ -21,6 +21,9 @@ psql_file() {
     printf "${D}"
   }
 
+printf "\n${G} -------- Changing password in juno/juno/settings.py -------- \n${D}"
+sed -e "16s#.*#senha_postgres = '${PGPASSWORD}'#" -i juno/juno/settings.py
+
 printf "\n${G} -------- Dropping databases -------- \n${D}"
 psql_query  "DROP DATABASE juno_people"            ""
 psql_query  "DROP DATABASE juno_access"            ""
