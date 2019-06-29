@@ -32,3 +32,19 @@ def make_table(body_content):
            for i in body_content)
 
     return "<table>{}{}</table".format(head, body)
+
+def retrive_all(database, servcice):
+    with connections[database].cursor() as cursor:
+        cursor.execute("SELECT * FROM {}()".format(servcice))
+        dict = dictfetchall(cursor)
+        content = make_table(dict)
+    return content
+
+def check_id(database, relation, id):
+    with connections[database].cursor() as cursor:
+        cursor.execute("SELECT * FROM retrieve_{}_by_id(%s)".format(relation), [id])
+        check_existence = cursor.fetchone()
+    if check_existence == None:
+        return False
+    else:
+        return True
