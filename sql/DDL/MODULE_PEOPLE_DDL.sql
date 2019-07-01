@@ -2,18 +2,18 @@ BEGIN;
 \echo  `printf 'admins'`
 -- admins
 
-    CREATE  ROLE dba
+    CREATE  ROLE dbajuno
       WITH    SUPERUSER
               CREATEDB
               CREATEROLE
       LOGIN   ENCRYPTED PASSWORD 'dba1234'
       VALID   UNTIL '2019-07-01';
-      
+
     CREATE  SCHEMA admins;
 
     GRANT   USAGE
     ON      SCHEMA  admins
-    TO      dba;
+    TO      dbajuno;
 
 --
 

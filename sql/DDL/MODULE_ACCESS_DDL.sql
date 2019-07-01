@@ -6,7 +6,7 @@ BEGIN;
 
     GRANT   USAGE
     ON      SCHEMA  admins
-    TO      dba;
+    TO      dbajuno;
 
 --
 
@@ -60,7 +60,7 @@ BEGIN;
     ON      FUNCTION check_senha(
         email               email,
         senha               TEXT)
-    TO      dba;
+    TO      dbajuno;
 
 --
 

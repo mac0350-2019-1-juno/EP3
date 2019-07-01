@@ -6,7 +6,7 @@ B="\e[1m"                       # bold
 DIM="\e[2m"
 D="\e[0m"                       # default
 
-export PGPASSWORD=c
+export PGPASSWORD=Victor17121997
 export ON_ERROR_STOP=1
 
 psql_query() {
@@ -33,7 +33,7 @@ psql_query  "DROP DATABASE juno_access_people"     ""
 psql_query  "DROP DATABASE juno_curriculum"        ""
 psql_query  "DROP DATABASE juno_people_curriculum" ""
 
-psql_query  "DROP ROLE IF EXISTS dba"
+psql_query  "DROP ROLE IF EXISTS dbajuno"
 
 set -e
 
