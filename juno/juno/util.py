@@ -7,11 +7,11 @@ def dictfetchall(cursor):
             for row in cursor.fetchall()
     ]
 
-def check_permission(user, servcice):
+def check_permission(user, service):
     if user == "":
         return False
     with connections['juno_access'].cursor() as cursor:
-        cursor.execute("SELECT * FROM retrieve_servico_by_nome(%s)", [servcice])
+        cursor.execute("SELECT * FROM retrieve_servico_by_nome(%s)", [service])
         servico_id = cursor.fetchone()[0]
     with connections['juno_access'].cursor() as cursor:
         cursor.execute("SELECT * FROM retrieve_usuario_perfil_all_by_usuario_id(%s)", [user])
@@ -33,9 +33,9 @@ def make_table(body_content):
 
     return "<table>{}{}</table".format(head, body)
 
-def retrive_all(database, servcice):
+def retrive_all(database, service):
     with connections[database].cursor() as cursor:
-        cursor.execute("SELECT * FROM {}()".format(servcice))
+        cursor.execute("SELECT * FROM {}()".format(service))
         dict = dictfetchall(cursor)
         content = make_table(dict)
     return content

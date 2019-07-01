@@ -39,12 +39,12 @@ def create(request):
 
     return render(request, "create.html", {'form':form, 'menu':name})
 
-def retrival(request):
-    servcice = "retrieve_instituto_all"
-    if not check_permission(request.user.username, servcice):
+def retrieval(request):
+    service = "retrieve_instituto_all"
+    if not check_permission(request.user.username, service):
         return render(request, "index.html", {'content':msg_nao_autorizado,'menu':name})
-    content = retrive_all("juno_people", servcice)
-    return render(request, "retrival.html", {'content':content, 'menu':name})
+    content = retrive_all("juno_people", service)
+    return render(request, "retrieval.html", {'content':content, 'menu':name})
 
 def update(request):
     if not check_permission(request.user.username, "update_instituto_by_id"):
