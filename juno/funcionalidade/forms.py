@@ -68,3 +68,9 @@ class Select_oferecimento(forms.Form):
                                 initial='',
                                 widget=forms.Select(),
                                 required=True)
+
+class Choose_ministra(forms.Form):
+    prof_nusp = forms.IntegerField(label='Nusp Professor......')
+    sigla = forms.CharField(label='Sigla da disciplina.', max_length=128)
+    semestre = forms.IntegerField(label='Semestre................')
+    ano = forms.IntegerField(label='Ano........................')

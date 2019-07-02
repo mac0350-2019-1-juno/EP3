@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Preencha para ver as notas dos alunos </h1>
+
+<form action="notas_alunos" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}

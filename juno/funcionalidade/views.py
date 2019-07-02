@@ -26,6 +26,9 @@ def funcionalidade(request):
     # Alunos que cursam um oferecimento
     if p_alunos_oferecimento(request.user.username):
         link_list += "<a href='alunos_oferecimento'> Alunos em um oferecimento </a><br>"
+    # Professor acessa nota dos alunos
+    if p_notas_alunos(request.user.username):
+        link_list += "<a href='notas_alunos'> Notas dos alunos </a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
@@ -105,3 +108,30 @@ def alunos_oferecimento(request):
 
     content += "</p>"
     return render(request, "funcionalidade/alunos_oferecimento.html", {'form':form, 'content':content})
+
+# Professor ve notas dos alunos
+def notas_alunos(request):
+    if not p_notas_alunos(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<p>"
+    if request.method == 'POST':
+        form = Choose_ministra(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            prof_nusp = form.cleaned_data["prof_nusp"]
+            sigla = form.cleaned_data["sigla"]
+            semestre = form.cleaned_data["semestre"]
+            ano = form.cleaned_data["ano"]
+
+            list_alunos =  list_notas_alunos(prof_nusp,sigla,semestre,ano)
+            content += "<table><tr><th>Nome</th><th>NUSP</th><th>Nota</th><th>Frequencia</th></tr>"
+            for a in list_alunos:
+                content +="<tr><td>"+str(a[0])+"</td><td>"+str(a[1])+"</td><td>"+str(a[2])+"</td><td>"+str(a[3])+"</td></tr>"
+            content += "</table>"
+
+    else:
+        form = Choose_ministra()
+
+    content += "</p>"
+    return render(request, "funcionalidade/notas_alunos.html", {'form':form, 'content':content})
