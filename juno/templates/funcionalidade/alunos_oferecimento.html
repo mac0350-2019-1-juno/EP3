@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Escolha oferecimento para ver seus alunos </h1>
+
+<form action="alunos_oferecimento" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}
