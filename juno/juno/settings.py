@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'instituto.apps.institutoConfig',
     'log.apps.logConfig',
     'home.apps.homeConfig',
-    'departamento.apps.departamentoConfig'
+    'departamento.apps.departamentoConfig',
 ]
 
 MIDDLEWARE = [

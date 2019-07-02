@@ -1,0 +1,8 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Escolha a ênfase para fazer a contagem </h1>
+
+<form action="contador_aluno_conclui_enfase" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>

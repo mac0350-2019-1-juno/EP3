@@ -31,7 +31,7 @@ def make_table(body_content):
              "".join("<th>{}</th>".format(j) for j in i.values()))
            for i in body_content)
 
-    return "<table>{}{}</table".format(head, body)
+    return "<table>{}{}</table>".format(head, body)
 
 def retrive_all(database, service):
     with connections[database].cursor() as cursor:
