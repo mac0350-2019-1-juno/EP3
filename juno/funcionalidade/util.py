@@ -51,15 +51,15 @@ def list_alunos_curso(curso):
 
 # ALUNOS QUE FAZEM UM OFERECIMENTO
 def p_alunos_oferecimento(user):
-    '''
-    retrieve_oferecimento_all()
-    retrieve_ministra_by_id
-    retrieve_professor_by_id
-    retrieve_pessoa_by_id
-    retrieve_disciplina_by_id
-    '''
-    if check_permission(user, "retrieve_curso_by_id"):
-        return True
+    if check_permission(user, "retrieve_oferecimento_all"):
+        if check_permission(user, "retrieve_ministra_by_id"):
+            if check_permission(user, "retrieve_professor_by_id"):
+                if check_permission(user, "retrieve_pessoa_by_id"):
+                    if check_permission(user, "retrieve_disciplina_by_id"):
+                        if check_permission(user, "retrieve_matricula_all_by_oferecimento_id"):
+                            if check_permission(user, "retrieve_aluno_by_id"):
+                                if check_permission(user, "retrieve_pessoa_by_id"):
+                                    return True
     return False
 
 def list_alunos_oferecimento(oferecimento):
