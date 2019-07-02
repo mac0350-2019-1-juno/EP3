@@ -11,26 +11,70 @@ from juno.util import *
 from funcionalidade.util import *
 from funcionalidade.forms import *
 
-
+# PAGINA PADRAO
 def funcionalidade(request):
     # logado?
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/acesso')
     link_list = ""
+    # Contador de alunos que completaram enfase
     if p_num_aluno_completa_enfase(request.user.username):
-        link_list += "<a href='contador_aluno_conclui_enfase'> Numero de alunos que completaram ênfase </a> "
+        link_list += "<a href='contador_aluno_conclui_enfase'> Numero de alunos que completaram ênfase </a><br>"
+    # Alunos que cursam um curso
+    if p_alunos_curso(request.user.username):
+        link_list += "<a href='alunos_curso'> Numero de alunos em um curso </a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
+# CONTAR ALUNOS QUE COMPLETARAM UMA TRILHA
 def contador_aluno_conclui_enfase(request):
+    # Checa permissoes
     if not p_num_aluno_completa_enfase(request.user.username):
         return render(request, "funcionalidade/nao_autorizado.html")
 
-    name = ""
+    # Get selected by user
+    content = "<p>"
     if request.method == 'POST':
         form = Select_enfase(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            # If selected is valid
+            id = form.cleaned_data["choice"]
+            with connections['juno_curriculum'].cursor() as cursor:
+                cursor.execute("SELECT nome FROM retrieve_enfase_by_id(%s)", (id))
+                content += cursor.fetchall()[0][0] + ": "
+            # Do the counting
+            content += num_aluno_completa_enfase(id)
     else:
         form = Select_enfase()
-    return render(request, "funcionalidade/contador_aluno_conclui_enfase.html", {'form':form})
+
+    content += "</p>"
+    return render(request, "funcionalidade/contador_aluno_conclui_enfase.html", {'form':form, 'content':content})
+
+# ALUNOS QUE FAZEM UM CURSO
+def alunos_curso(request):
+    # Checa permissoes
+    if not p_alunos_curso(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<p>"
+    if request.method == 'POST':
+        form = Select_curso(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            id = form.cleaned_data["choice"]
+            with connections['juno_curriculum'].cursor() as cursor:
+                cursor.execute("SELECT nome FROM retrieve_curso_by_id(%s)", (id,))
+                # Print the name
+                content += cursor.fetchone()[0] + ":<br>"
+
+            list_alunos = list_alunos_curso(id)
+            content += "<table><tr><th>Nome</th><th>NUSP</th><th>CPF</th></tr>"
+            for a in list_alunos:
+                content +="<tr><td>"+str(a[3])+"</td><td>"+str(a[1])+"</td><td>"+str(a[2])+"</td></tr>"
+            content += "</table>"
+
+    else:
+        form = Select_curso()
+
+    content += "</p>"
+    return render(request, "funcionalidade/alunos_curso.html", {'form':form, 'content':content})
