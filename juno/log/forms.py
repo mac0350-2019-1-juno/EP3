@@ -6,4 +6,4 @@ class Log_form(forms.ModelForm):
         model = User
         fields = ["email", "senha"]
     email = forms.CharField(label='Email', max_length=128)
-    senha = forms.CharField(label='Senha', max_length=128)
+    senha = forms.CharField(label='Senha', max_length=128, widget=forms.PasswordInput)

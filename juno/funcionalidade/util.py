@@ -81,7 +81,16 @@ def list_alunos_oferecimento(oferecimento):
 
 # Professor ve nota dos alunos
 def p_notas_alunos(user):
-    return True
+    if check_permission(user, "retrieve_pessoa_by_nusp"):
+        if check_permission(user, "retrieve_professor_by_pessoa_id"):
+            if check_permission(user, "retrieve_disciplina_by_sigla"):
+                if check_permission(user, "retrieve_ministra_by_professor_id_disciplina_id_semestre_ano"):
+                    if check_permission(user, "retrieve_oferecimento_by_ministra_id"):
+                        if check_permission(user, "retrieve_matricula_all_by_oferecimento_id"):
+                            if check_permission(user, "retrieve_aluno_by_id"):
+                                if check_permission(user, "retrieve_pessoa_by_id"):
+                                    return True
+    return False
 
 def list_notas_alunos(prof_nusp,sigla,semestre,ano):
 
@@ -94,7 +103,6 @@ def list_notas_alunos(prof_nusp,sigla,semestre,ano):
     with connections['juno_people'].cursor() as cursor:
         cursor.execute("SELECT id FROM retrieve_professor_by_pessoa_id(%s)", (pessoa_id,))
         prof_id = cursor.fetchone()
-    print(prof_id,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     # Acha id de disciplina por sigla
     with connections['juno_curriculum'].cursor() as cursor:
