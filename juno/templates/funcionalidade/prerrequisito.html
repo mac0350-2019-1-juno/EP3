@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Checar prerrequisitos </h1>
+
+<form action="prerrequisito" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}

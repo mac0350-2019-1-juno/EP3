@@ -74,3 +74,19 @@ class Choose_ministra(forms.Form):
     sigla = forms.CharField(label='Sigla da disciplina.', max_length=128)
     semestre = forms.IntegerField(label='Semestre................')
     ano = forms.IntegerField(label='Ano........................')
+
+
+class Select_enfase(forms.Form):
+    with connections['juno_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT id,nome FROM retrieve_disciplina_all()")
+        disciplina = cursor.fetchall()
+
+    for i in range(0,len(disciplina)):
+        disciplina[i] = (disciplina[i][0],disciplina[i][1])
+
+    nusp = forms.IntegerField(label='NUSP')
+    choice = forms.ChoiceField( choices = disciplina,
+                                label="",
+                                initial='',
+                                widget=forms.Select(),
+                                required=True)

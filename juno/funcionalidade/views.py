@@ -29,6 +29,9 @@ def funcionalidade(request):
     # Professor acessa nota dos alunos
     if p_notas_alunos(request.user.username):
         link_list += "<a href='notas_alunos'> Notas dos alunos </a><br>"
+    # Prerrequisito
+    if p_prerrequisito(request.user.username):
+        link_list += "<a href='prerrequisito'> Prerrequisito </a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
@@ -135,3 +138,24 @@ def notas_alunos(request):
 
     content += "</p>"
     return render(request, "funcionalidade/notas_alunos.html", {'form':form, 'content':content})
+
+# Prerrequisito
+def prerrequisito(request):
+    if not p_notas_alunos(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<p>"
+    if request.method == 'POST':
+        form = Select_enfase(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            id = form.cleaned_data["choice"]
+            nusp = form.cleaned_data["nusp"]
+
+            disc_list = list_prerrequisito(id,nusp)
+            content += disc_list
+    else:
+        form = Select_enfase()
+
+    content += "</p>"
+    return render(request, "funcionalidade/prerrequisito.html", {'form':form, 'content':content})
