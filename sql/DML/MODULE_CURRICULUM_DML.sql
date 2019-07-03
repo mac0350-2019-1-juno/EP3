@@ -11,7 +11,8 @@ VALUES  (45052,     'BCC',                      1 ),
         (00006,     'Engenharia Civil',         2 ),
         (00007,     'Engenharia Ambiental',     2 ),
         (00008,     'Moda',                     4 ),
-        (00009,     'Filosofia',                3 );
+        (00009,     'Filosofia',                3 ),
+        (12345,     'cur_ex',                   1 );
 
 INSERT  INTO disciplina
         (sigla,     departamento_id,                                    nome,                                               credito_aula,   credito_trabalho,   semestre_ideal  )
@@ -23,8 +24,12 @@ VALUES  ('MAC0110', 1,  'Introdução à Computação',                         
         ('MAT0349', 1,  'Introdução à Lógica',                              4,              0,                  4               ),
         ('MAE0119', 4,  'Introdução à Probabilidade e à Estatística',       6,              0,                  5               ),
         ('MAE0228', 4,  'Noções de Probabilidade e Processos Estocásticos', 4,              0,                  6               ),
-        ('4302112', 11,  'Física II',                                        6,              0,                  7               ),
-        ('MAC0335', 1,  'Leitura Dramática',                                3,              0,                  8               );
+        ('4302112', 11,  'Física II',                                       6,              0,                  7               ),
+        ('MAC0335', 1,  'Leitura Dramática',                                3,              0,                  8               ),
+        ('AAA0001', 1,  'disc_ex_1',                                        4,              0,                  1               ),
+        ('AAA0002', 1,  'disc_ex_2',                                        4,              0,                  1               ),
+        ('AAA0003', 1,  'disc_ex_3',                                        4,              0,                  2               ),
+        ('AAA0004', 1,  'disc_ex_4',                                        4,              0,                  2               );
 
 
 INSERT  INTO enfase
@@ -38,20 +43,22 @@ VALUES  ('IA',          4,              (SELECT id FROM curso WHERE codigo = 450
         ('Cientifica',  1,              (SELECT id FROM curso WHERE codigo = 45052) ),
         ('Eletiva',     1,              (SELECT id FROM curso WHERE codigo = 45052) ),
         ('Livre',       1,              (SELECT id FROM curso WHERE codigo = 45052) ),
-        ('Freud',       3,              (SELECT id FROM curso WHERE codigo = 00009) );
+        ('Freud',       3,              (SELECT id FROM curso WHERE codigo = 00009) ),
+        ('enf_ex_1',    2,              (SELECT id FROM curso WHERE codigo = 12345) ),
+        ('enf_ex_2',    1,              (SELECT id FROM curso WHERE codigo = 12345) );
 
 INSERT  INTO prerrequisito
         (curso_id,                                      disciplina_id,                                          requisito_id                                        )
-VALUES  ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0216'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0218') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAE0119'),    (SELECT id FROM disciplina WHERE sigla = 'MAE0228') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0110'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0318') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0110'),    (SELECT id FROM disciplina WHERE sigla = 'MAT0349') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0110'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0335') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0216'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0318') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0216'),    (SELECT id FROM disciplina WHERE sigla = 'MAT0349') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0216'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0335') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0110'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0216') ),
-        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0425'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0318') );
+VALUES  ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0218'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0216') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAE0228'),    (SELECT id FROM disciplina WHERE sigla = 'MAE0119') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0318'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0110') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAT0349'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0110') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0335'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0110') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0318'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0216') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAT0349'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0216') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0335'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0216') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0216'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0110') ),
+        ((SELECT id FROM curso WHERE codigo = 45052),   (SELECT id FROM disciplina WHERE sigla = 'MAC0318'),    (SELECT id FROM disciplina WHERE sigla = 'MAC0425') );
 
 
 INSERT  INTO modulo
@@ -65,7 +72,10 @@ VALUES  ('Obrigatórias',            23,                 (SELECT id FROM enfase 
         ('Introdução à IA',         2,                  (SELECT id FROM enfase WHERE nome = 'IA'         )  ),
         ('Sistemas',                2,                  (SELECT id FROM enfase WHERE nome = 'IA'         )  ),
         ('Teoria associada à IA',   1,                  (SELECT id FROM enfase WHERE nome = 'IA'         )  ),
-        ('Bancos de Dados',         2,                  (SELECT id FROM enfase WHERE nome = 'IA'         )  );
+        ('Bancos de Dados',         2,                  (SELECT id FROM enfase WHERE nome = 'IA'         )  ),
+        ('mod_ex_1',                2,                  (SELECT id FROM enfase WHERE nome = 'enf_ex_1'   )  ),
+        ('mod_ex_2',                1,                  (SELECT id FROM enfase WHERE nome = 'enf_ex_1'   )  ),
+        ('mod_ex_3',                1,                  (SELECT id FROM enfase WHERE nome = 'enf_ex_2'   )  );
 
 
 INSERT  INTO disciplina_modulo
@@ -79,7 +89,11 @@ VALUES  ((SELECT id FROM disciplina WHERE sigla = 'MAC0110'),   (SELECT id FROM 
         ((SELECT id FROM disciplina WHERE sigla = 'MAC0318'),   (SELECT id FROM modulo WHERE nome = 'Introdução à IA'      )    ),
         ((SELECT id FROM disciplina WHERE sigla = 'MAC0218'),   (SELECT id FROM modulo WHERE nome = 'Sistemas'             )    ),
         ((SELECT id FROM disciplina WHERE sigla = 'MAT0349'),   (SELECT id FROM modulo WHERE nome = 'Teoria associada à IA')    ),
-        ((SELECT id FROM disciplina WHERE sigla = 'MAC0425'),   (SELECT id FROM modulo WHERE nome = 'IA'                   )    );
+        ((SELECT id FROM disciplina WHERE sigla = 'MAC0425'),   (SELECT id FROM modulo WHERE nome = 'IA'                   )    ),
+        ((SELECT id FROM disciplina WHERE sigla = 'AAA0001'),   (SELECT id FROM modulo WHERE nome = 'mod_ex_1'                   )    ),
+        ((SELECT id FROM disciplina WHERE sigla = 'AAA0002'),   (SELECT id FROM modulo WHERE nome = 'mod_ex_1'                   )    ),
+        ((SELECT id FROM disciplina WHERE sigla = 'AAA0003'),   (SELECT id FROM modulo WHERE nome = 'mod_ex_2'                   )    ),
+        ((SELECT id FROM disciplina WHERE sigla = 'AAA0004'),   (SELECT id FROM modulo WHERE nome = 'mod_ex_3'                   )    );
 
 
 COMMIT;

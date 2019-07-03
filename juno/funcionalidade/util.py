@@ -313,3 +313,79 @@ def calcula_media_oferecimento(id):
 
     result /= count
     return result
+
+def aluno_completou_enfase(aluno_id, enfase):
+    with connections['juno_people_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT oferecimento_id FROM retrieve_matricula_all_by_aluno_id(%s) WHERE estado='C'", (aluno_id,))
+        oferecimentos = cursor.fetchall()
+    # Pega modulos da enfase
+    with connections['juno_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_modulo_all_by_enfase_id(%s)", (enfase,))
+        modulos = cursor.fetchall()
+    # Para a enfase, roda todos os módulos
+    completas = -1
+    precisa = 0
+    for m in modulos:
+        completas = 0
+        precisa = 0
+        with connections['juno_curriculum'].cursor() as cursor:
+            cursor.execute("SELECT id FROM retrieve_disciplina_modulo_by_id(%s)", (m[0],))
+            disciplinas = cursor.fetchall()
+            # Quantas disciplinas completas precisam
+            precisa += len(disciplinas)
+        # Roda as disciplinas daquele módulo
+        for d in disciplinas:
+            # Roda os oferecimento do aluno
+            for o in oferecimentos:
+                # Step para achar o disciplina_id
+                with connections['juno_people_curriculum'].cursor() as cursor:
+                    cursor.execute("SELECT ministra_id FROM retrieve_oferecimento_by_id(%s)", (o[0],))
+                    ministra_id = cursor.fetchone()
+
+                # disciplina id
+                with connections['juno_people_curriculum'].cursor() as cursor:
+                    cursor.execute("SELECT disciplina_id FROM retrieve_ministra_by_id(%s)", (ministra_id,))
+                    disciplina_id = cursor.fetchone()
+
+                if disciplina_id[0] == d[0]:
+                    completas += 1
+                print(completas,"/",precisa)
+
+    if completas == precisa:
+        return True
+    return False
+
+def aluno_formou_curso(nusp, curso):
+    # Procura pelo id do curso
+    with connections['juno_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_curso_by_codigo(%s)", (curso,))
+        curso_id = cursor.fetchone()
+    if curso_id is None:
+        return False
+    curso_id = curso_id[0]
+
+    # Pega todas as pessoas
+    with connections['juno_people'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_pessoa_by_nusp(%s)", (nusp,))
+        pessoa_id = cursor.fetchone()
+    if pessoa_id is None:
+        return False
+    pessoa_id = pessoa_id[0]
+
+    # Pega o id de aluno
+    with connections['juno_people'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_aluno_all_by_pessoa_id(%s)", (pessoa_id,))
+        aluno_id = cursor.fetchone()
+    if aluno_id is None:
+        return False
+    aluno_id = aluno_id[0]
+
+
+
+    with connections['juno_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_enfase_all_by_curso_id(%s)", (curso_id,))
+        enfases = cursor.fetchall()
+        for enfase in enfases:
+            if not aluno_completou_enfase(aluno_id, enfase):
+                return False
+    return True

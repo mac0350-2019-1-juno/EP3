@@ -11,4 +11,5 @@ urlpatterns = [
     path('prerrequisito', views.prerrequisito, name='prerrequisito'),
     path('nota_de_aluno', views.nota_de_aluno, name='nota_de_aluno'),
     path('media_oferecimento', views.media_oferecimento, name='media_oferecimento'),
+    path('formou', views.formou, name='formou'),
 ]

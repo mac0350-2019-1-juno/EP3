@@ -6,7 +6,7 @@ B="\e[1m"                       # bold
 DIM="\e[2m"
 D="\e[0m"                       # default
 
-export PGPASSWORD=Victor17121997
+export PGPASSWORD=c
 export ON_ERROR_STOP=1
 
 psql_query() {

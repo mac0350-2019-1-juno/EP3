@@ -38,6 +38,9 @@ def funcionalidade(request):
     # Media de um oferecimento
     if p_media_oferecimento(request.user.username):
         link_list += "<a href='media_oferecimento'> Ver notas </a><br>"
+    # Media de um oferecimento
+    if p_num_aluno_completa_enfase(request.user.username):
+        link_list += "<a href='formou'> Ver se um aluno se formou</a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
@@ -208,3 +211,27 @@ def media_oferecimento(request):
 
     content += "</p>"
     return render(request, "funcionalidade/media_oferecimento.html", {'form':form, 'content':content})
+
+# Verifica se o aluno se formou em um curso
+def formou(request):
+    if not p_nota_de_aluno(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<table>"
+    if request.method == 'POST':
+        form = Choose_nusp_curso(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            nusp = form.cleaned_data["nusp"]
+            curso = form.cleaned_data["curso"]
+            formou = aluno_formou_curso(nusp, curso)
+
+            content += "O aluno "
+            if not formou:
+                content += "n&atilde;o "
+            content += "se formou."
+    else:
+        form = Choose_nusp_curso()
+
+    content += "</p>"
+    return render(request, "funcionalidade/formou.html", {'form':form, 'content':content})

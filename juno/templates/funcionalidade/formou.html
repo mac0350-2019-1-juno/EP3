@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Verificar se um aluno se formou</h1>
+
+<form action="formou" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}

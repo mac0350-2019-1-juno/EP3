@@ -93,3 +93,7 @@ class Select_requisito(forms.Form):
 
 class Choose_nusp(forms.Form):
     nusp = forms.IntegerField(label='NUSP')
+
+class Choose_nusp_curso(forms.Form):
+    nusp = forms.IntegerField(label='NUSP')
+    curso = forms.IntegerField(label='Sigla do curso')
