@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Notas </h1>
+
+<form action="nota_de_aluno" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}

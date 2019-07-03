@@ -76,7 +76,7 @@ class Choose_ministra(forms.Form):
     ano = forms.IntegerField(label='Ano........................')
 
 
-class Select_enfase(forms.Form):
+class Select_requisito(forms.Form):
     with connections['juno_curriculum'].cursor() as cursor:
         cursor.execute("SELECT id,nome FROM retrieve_disciplina_all()")
         disciplina = cursor.fetchall()
@@ -90,3 +90,6 @@ class Select_enfase(forms.Form):
                                 initial='',
                                 widget=forms.Select(),
                                 required=True)
+
+class Choose_nusp(forms.Form):
+    nusp = forms.IntegerField(label='NUSP')

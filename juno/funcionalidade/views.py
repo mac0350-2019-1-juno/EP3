@@ -32,6 +32,9 @@ def funcionalidade(request):
     # Prerrequisito
     if p_prerrequisito(request.user.username):
         link_list += "<a href='prerrequisito'> Prerrequisito </a><br>"
+    # Aluno ve suas notas
+    if p_prerrequisito(request.user.username):
+        link_list += "<a href='nota_de_aluno'> Ver notas </a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
@@ -49,10 +52,10 @@ def contador_aluno_conclui_enfase(request):
             # If selected is valid
             id = form.cleaned_data["choice"]
             with connections['juno_curriculum'].cursor() as cursor:
-                cursor.execute("SELECT nome FROM retrieve_enfase_by_id(%s)", (id))
+                cursor.execute("SELECT nome FROM retrieve_enfase_by_id(%s)", (id,))
                 content += cursor.fetchall()[0][0] + ": "
             # Do the counting
-            content += num_aluno_completa_enfase(id)
+            content += str(num_aluno_completa_enfase(id))
     else:
         form = Select_enfase()
 
@@ -146,7 +149,7 @@ def prerrequisito(request):
 
     content = "<p>"
     if request.method == 'POST':
-        form = Select_enfase(request.POST)
+        form = Select_requisito(request.POST)
         if form.is_valid():
             # If selected is valid
             id = form.cleaned_data["choice"]
@@ -155,7 +158,30 @@ def prerrequisito(request):
             disc_list = list_prerrequisito(id,nusp)
             content += disc_list
     else:
-        form = Select_enfase()
+        form = Select_requisito()
 
     content += "</p>"
     return render(request, "funcionalidade/prerrequisito.html", {'form':form, 'content':content})
+
+# Aluno ve nota
+def nota_de_aluno(request):
+    if not p_nota_de_aluno(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<table>"
+    if request.method == 'POST':
+        form = Choose_nusp(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            nusp = form.cleaned_data["nusp"]
+            notas = list_nota_de_aluno(nusp)
+
+            content += "<table><tr><th>Disciplina</th><th>Nota</th><th>Frequencia</th><th>Estado</th></tr>"
+            for n in notas:
+                content += "<tr><td>"+n[0]+"</td><td>"+str(n[1])+"</td><td>"+str(n[2])+"</td><td>"+n[3]+"</td></tr>"
+
+    else:
+        form = Choose_nusp()
+
+    content += "</table>"
+    return render(request, "funcionalidade/nota_de_aluno.html", {'form':form, 'content':content})

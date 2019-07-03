@@ -16,12 +16,50 @@ def num_aluno_completa_enfase(enfase):
         alunos = cursor.fetchall()
     # Pega modulos da enfase
     with connections['juno_curriculum'].cursor() as cursor:
-        cursor.execute("SELECT id FROM retrieve_modulo_all_by_enfase_id(%s)", (enfase))
+        cursor.execute("SELECT id FROM retrieve_modulo_all_by_enfase_id(%s)", (enfase,))
         modulos = cursor.fetchall()
 
-    completou = True
+    # Contador
+    count = 0
 
-    return "TODO"
+    # Para cada aluno
+    for a in alunos:
+        with connections['juno_people_curriculum'].cursor() as cursor:
+            cursor.execute("SELECT oferecimento_id FROM retrieve_matricula_all_by_aluno_id(%s) WHERE estado='C'", (a[0],))
+            oferecimentos = cursor.fetchall()
+        # Para a enfase, roda todos os módulos
+        completas = -1
+        precisa = 0
+        for m in modulos:
+            completas = 0
+            precisa = 0
+            with connections['juno_curriculum'].cursor() as cursor:
+                cursor.execute("SELECT id FROM retrieve_disciplina_modulo_by_id(%s)", (m[0],))
+                disciplinas = cursor.fetchall()
+                # Quantas disciplinas completas precisam
+                precisa += len(disciplinas)
+            # Roda as disciplinas daquele módulo
+            for d in disciplinas:
+                # Roda os oferecimento do aluno
+                for o in oferecimentos:
+                    # Step para achar o disciplina_id
+                    with connections['juno_people_curriculum'].cursor() as cursor:
+                        cursor.execute("SELECT ministra_id FROM retrieve_oferecimento_by_id(%s)", (o[0],))
+                        ministra_id = cursor.fetchone()
+
+                    # disciplina id
+                    with connections['juno_people_curriculum'].cursor() as cursor:
+                        cursor.execute("SELECT disciplina_id FROM retrieve_ministra_by_id(%s)", (ministra_id,))
+                        disciplina_id = cursor.fetchone()
+
+                    if disciplina_id[0] == d[0]:
+                        completas += 1
+                    print(completas,"/",precisa)
+
+        if completas == precisa:
+            count += 1
+
+    return count
 
 # ALUNOS QUE FAZEM UM CURSO
 def p_alunos_curso(user):
@@ -173,13 +211,13 @@ def list_prerrequisito(id, nusp):
     for a in aluno_id:
         # Matriculas do aluno
         with connections['juno_people_curriculum'].cursor() as cursor:
-            cursor.execute("SELECT oferecimento_id,nota FROM retrieve_matricula_all_by_aluno_id(%s)", (pessoa_id,))
+            cursor.execute("SELECT oferecimento_id,estado FROM retrieve_matricula_all_by_aluno_id(%s)", (pessoa_id,))
             matriculas = cursor.fetchall()
 
         for p in prerrequisitos:
             is_in = False
             for m in matriculas:
-                if p == m[0] and m[1] >= 5:
+                if p == m[0] and m[1] == 'C':
                     is_in = True
                     break
 
@@ -190,3 +228,59 @@ def list_prerrequisito(id, nusp):
                     disc_list += nome
 
     return disc_list
+
+# Aluno vê nota
+def p_nota_de_aluno(user):
+    if check_permission(user, "retrieve_pessoa_by_nusp"):
+        if check_permission(user, "retrieve_aluno_by_pessoa_id"):
+            if check_permission(user, "retrieve_matricula_all_by_aluno_id"):
+                if check_permission(user, "retrieve_oferecimento_by_id"):
+                    if check_permission(user, "retrieve_ministra_by_id"):
+                        if check_permission(user, "retrieve_disciplina_by_id"):
+                            return True
+    return False
+
+
+def list_nota_de_aluno(nusp):
+    # Acha pessoa pelo nusp
+    with connections['juno_people'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_pessoa_by_nusp(%s)", (nusp,))
+        pessoa_id = cursor.fetchone()
+
+    # Acha aluno pela pessoa id
+    with connections['juno_people'].cursor() as cursor:
+        cursor.execute("SELECT id FROM retrieve_aluno_by_pessoa_id(%s)", (pessoa_id,))
+        aluno_id = cursor.fetchone()
+
+    # Acha todas as matriculas do aluno
+    with connections['juno_people_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT * FROM retrieve_matricula_all_by_aluno_id(%s)", (aluno_id,))
+        matriculas = cursor.fetchall()
+
+    # Lista com notas
+    notas = []
+
+    for m in matriculas:
+        # Conseguir ministra pelo oferecimento
+        with connections['juno_people_curriculum'].cursor() as cursor:
+            cursor.execute("SELECT ministra_id FROM retrieve_oferecimento_by_id(%s)", (m[2],))
+            ministra_id = cursor.fetchone()
+
+        # Conseguir id disciplina por ministra
+        with connections['juno_people_curriculum'].cursor() as cursor:
+            cursor.execute("SELECT disciplina_id FROM retrieve_ministra_by_id(%s)", (ministra_id,))
+            disciplina_id = cursor.fetchone()
+
+        # Conseguir nome com disciplina id
+        with connections['juno_curriculum'].cursor() as cursor:
+            cursor.execute("SELECT nome FROM retrieve_disciplina_by_id(%s)", (disciplina_id,))
+            nome = cursor.fetchone()[0]
+
+        nota = m[4]
+        estado = m[3]
+        frequencia = m[5]
+
+        notas.append([nome, nota, frequencia, estado])
+
+
+    return notas
