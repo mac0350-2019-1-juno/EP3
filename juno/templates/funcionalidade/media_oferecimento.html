@@ -1,0 +1,9 @@
+<a href="..">Voltar ao inicio</a>
+<h1> Checar média de um oferecimento </h1>
+
+<form action="media_oferecimento" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submeter">
+</form>
+{{ content|safe }}

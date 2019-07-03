@@ -284,3 +284,32 @@ def list_nota_de_aluno(nusp):
 
 
     return notas
+
+# Calcula media de oferecimento
+def p_media_oferecimento(user):
+    if check_permission(user, "retrieve_matricula_all_by_oferecimento_id"):
+        if check_permission(user, "retrieve_oferecimento_all"):
+            if check_permission(user, "retrieve_ministra_by_id"):
+                if check_permission(user, "retrieve_professor_by_id"):
+                    if check_permission(user, "retrieve_pessoa_by_id"):
+                        if check_permission(user, "retrieve_disciplina_by_id"):
+                            return True
+    return False
+
+def calcula_media_oferecimento(id):
+    # Pega todas as notas das matriculas
+    with connections['juno_people_curriculum'].cursor() as cursor:
+        cursor.execute("SELECT nota FROM retrieve_matricula_all_by_oferecimento_id(%s)", (id,))
+        matriculas = cursor.fetchall()
+
+    count = 0
+    result = 0
+    for m in matriculas:
+        result += m[0]
+        count += 1
+
+    if count == 0:
+        return 0
+
+    result /= count
+    return result

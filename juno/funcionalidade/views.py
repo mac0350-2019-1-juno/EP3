@@ -35,6 +35,9 @@ def funcionalidade(request):
     # Aluno ve suas notas
     if p_prerrequisito(request.user.username):
         link_list += "<a href='nota_de_aluno'> Ver notas </a><br>"
+    # Media de um oferecimento
+    if p_media_oferecimento(request.user.username):
+        link_list += "<a href='media_oferecimento'> Ver notas </a><br>"
 
     return render(request, "funcionalidade/list.html", {'content':link_list})
 
@@ -185,3 +188,23 @@ def nota_de_aluno(request):
 
     content += "</table>"
     return render(request, "funcionalidade/nota_de_aluno.html", {'form':form, 'content':content})
+
+# Calcular media de um oferecimento
+def media_oferecimento(request):
+    if not p_media_oferecimento(request.user.username):
+        return render(request, "funcionalidade/nao_autorizado.html")
+
+    content = "<p>"
+    if request.method == 'POST':
+        form = Select_oferecimento(request.POST)
+        if form.is_valid():
+            # If selected is valid
+            id = form.cleaned_data["choice"]
+            media = calcula_media_oferecimento(id)
+            content += "Média: " + str(media)
+
+    else:
+        form = Select_oferecimento()
+
+    content += "</p>"
+    return render(request, "funcionalidade/media_oferecimento.html", {'form':form, 'content':content})
