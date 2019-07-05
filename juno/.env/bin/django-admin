@@ -1,0 +1,12 @@
+#!/bin/sh
+'''exec' "/mnt/data/documents/BCC/2019.1/MAC0350/EPs/07-07 EP3 - Finalização e deployment/juno/.env/bin/python" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+
+from django.core.management import execute_from_command_line
+
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+    sys.exit(execute_from_command_line())
